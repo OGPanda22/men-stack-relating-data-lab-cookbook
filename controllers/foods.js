@@ -40,10 +40,19 @@ router.post('/', async (req, res) => {
 
 router.delete('/:itemId', async (req, res) => {
     try {
+    //Look up the user from req.session
       const currentUser = await User.findById(req.session.user._id);
+
+    //Use the .deleteOne() method to delete a food using the id supplied from req.params
       currentUser.pantry.id(req.params.itemId).deleteOne();
+
+    //Save changes to the user
       await currentUser.save();
-      res.redirect(`/users/${user._id}/foods`);
+
+    //Redirect back to the index view
+      res.redirect(`/users/${currentUser._id}/foods`);
+
+    //If any errors, log them and redirect back home /
     } catch (error) {
       console.log(error);
       res.redirect('/');
@@ -52,9 +61,19 @@ router.delete('/:itemId', async (req, res) => {
 
 router.get('/:itemId/edit', async (req, res) => {
     try {
+    //Look up the user from req.session
       const currentUser = await User.findById(req.session.user._id);
+
+    //Find the current food from the id using req.params
       const item = currentUser.pantry.id(req.params.itemId);
-      res.render('foods/edit.ejs', { item });
+
+    //This route should res.render() an edit.ejs view
+      res.render('foods/edit.ejs', { 
+
+    //Send the current food to the view via res.locals
+        item: item });
+
+    //If any errors, log them and redirect back home /
     } catch (error) {
       console.log(error);
       res.redirect('/');
@@ -64,19 +83,19 @@ router.get('/:itemId/edit', async (req, res) => {
 router.put('/:itemId', async (req, res) => {
     //find user from req.session
     try {
-      const currentUser = await User.findById(req.session.user._Id);
+    const currentUser = await User.findById(req.session.user._id);
 
     //find current food from id supplied by req.params
-      const food = user.pantry.id(req.params.itemId);
-
+    const item = currentUser.pantry.id(req.params.itemId);
+    
      // Update food item with new form data
-      food.set(req.body);
+      item.set(req.body);
 
     // Save changes to the user document
-      await user.save();
+      await currentUser.save();
     
     //redirect back to index
-      res.redirect(`/users/${user._id}/foods`);
+      res.redirect(`/users/${currentUser._id}/foods`);
     } catch (error) {
 
     //if any errors, log them and redirect back to home

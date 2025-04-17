@@ -7,17 +7,17 @@ const foodSchema = new mongoose.Schema({
     required: true,
   },
   quantity: {
-    type: Number,
+    type: String,
     required: true,
   },
   expiration: {
-    type: Date,
+    type: String,
     required: true,
   },
 });
 
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,

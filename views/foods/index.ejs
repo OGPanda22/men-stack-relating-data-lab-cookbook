@@ -8,15 +8,24 @@
   <body>
     <%- include('../partials/_navbar.ejs') %>
     <h1>Welcome to my Pantry</h1>
-    <a href="/users/:userId/foods/new">Add New Item</a>
+    <a href="/users/<%= user._id %>/foods/new">Add New Item</a>
     <ul>
-      <% foods.forEach((food)=>{ %>
-      <li>
-          <a href="/users/<%= user._id %>/foods/<%= food._id %>">
-          Item: <%= foods.name %> , Quantity: <%= foods.quantity %> , Expiration Date: <%= foods.expiration %>
-          </a>
-      </li>
+      <% if (pantry.length > 0) { %>
+        <% pantry.forEach(item => { %>
+         <li>
+          Item Name: <%= item.name %>
+          Quantity: <%= item.quantity %>
+          Expiration Date: <%= item.expiration %>
+          <a href="/users/<%= user._id %>/foods/<%= item._id %>/edit">Edit</a>
+          
+          <form action="/users/<%= user._id %>/foods/<%= item._id %>?_method=DELETE" method="POST">
+          <button type="submit">Delete</button>
+          </form>
+        </li>
       <% }) %>
+    <% } else { %>
+      <p>There are no items in this pantry.</p>
+    <% } %>
     </ul>
   </body>
 </html>
